@@ -172,7 +172,7 @@ fun AtlasScreen(
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             state = gridState,
-            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 128.dp + navBarBottom),
+            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 184.dp + navBarBottom),
             horizontalArrangement = Arrangement.spacedBy(14.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier

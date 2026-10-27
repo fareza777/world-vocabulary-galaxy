@@ -6,9 +6,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,7 +45,7 @@ fun PrivacyScreen(onBack: () -> Unit) {
     val sections = listOf(
         LegalSection(
             "The short version",
-            "Verbilume has no accounts, no analytics, no advertising and no internet permission. Your learning record stays on this device unless you deliberately export it.",
+            "Verbilume has no accounts and no analytics of its own. Your learning record stays on this device unless you deliberately export it. The free app shows ads from Google AdMob, which requires an internet connection; an optional one-time purchase removes banner and interstitial ads.",
         ),
         LegalSection(
             "What the app stores",
@@ -50,7 +53,17 @@ fun PrivacyScreen(onBack: () -> Unit) {
         ),
         LegalSection(
             "Network access",
-            "Verbilume does not request the Android INTERNET permission. The app cannot send your data over a network, and it does not embed third-party analytics, advertising or crash-reporting SDKs.\n\nThe Google Play store may independently collect installation and diagnostic information under Google's own privacy policy. Verbilume does not receive or link that information to your learning record.",
+            "Verbilume requests the Android INTERNET permission only so the Google Mobile Ads SDK can request ads. Vocabulary, audio and your progress work fully offline, and none of your learning record is included in ad requests. The app embeds no analytics or crash-reporting SDKs of its own.\n\nThe Google Play store may independently collect installation and diagnostic information under Google's own privacy policy.",
+        ),
+        LegalSection(
+            "Advertising",
+            "Banner, interstitial and optional rewarded ads are supplied by Google AdMob. To deliver and measure ads, Google may process device information such as your advertising ID, IP address, approximate location derived from IP, and ad interactions, under Google's advertising policies. Rewarded ads are always optional; watching one adds bonus XP. Your vocabulary progress, saved words and typing results are never sent to Google.",
+            linkLabel = "Google advertising policies",
+            linkUrl = "https://policies.google.com/technologies/ads",
+        ),
+        LegalSection(
+            "Purchases",
+            "The optional Remove ads purchase is a one-time in-app purchase handled entirely by Google Play. Verbilume never receives or stores your payment details. The app keeps only a local flag that ads are off, and checks with Google Play at launch whether the purchase is still active. You can restore the purchase from Settings on any device signed in with the same Google account. Refunds follow Google Play's policy.",
         ),
         LegalSection(
             "Notifications",
@@ -66,11 +79,11 @@ fun PrivacyScreen(onBack: () -> Unit) {
         ),
         LegalSection(
             "Children",
-            "Verbilume is suitable for general audiences. It has no sign-in, no social features, no purchases, no advertising and no data collection, so there is nothing for a child to share.",
+            "Verbilume is not directed at children under 13. It has no sign-in and no social features. An optional one-time remove-ads purchase is handled by Google Play. Ads are provided by Google AdMob under Google's own policies.",
         ),
         LegalSection(
             "Your choices",
-            "You can edit your display name, disable reminders, clear your name, or erase all learning progress inside the app. Uninstalling Verbilume deletes the app's private storage, including your progress and settings. Exported backup files remain wherever you saved them.",
+            "You can reset or delete your advertising ID, and limit ad personalisation, in Android system settings. You can also edit your display name, disable reminders, clear your name, or erase all learning progress inside the app. Uninstalling Verbilume deletes the app's private storage, including your progress and settings. Exported backup files remain wherever you saved them.",
         ),
         LegalSection(
             "Changes",
@@ -83,8 +96,8 @@ fun PrivacyScreen(onBack: () -> Unit) {
     )
     LegalPage(
         title = "Privacy policy",
-        subtitle = "Nothing leaves this device.",
-        updated = "Effective 26 October 2026",
+        subtitle = "Your learning record stays here.",
+        updated = "Effective 27 October 2026",
         sections = sections,
         onBack = onBack,
     )
@@ -165,11 +178,12 @@ private fun LegalPage(
 ) {
     val colors = LocalVerbiColors.current
     val uriHandler = LocalUriHandler.current
+    val navBarBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     PaperBackground {
         Column(Modifier.fillMaxSize()) {
             PageTopBar(title, onBack = onBack)
             LazyColumn(
-                contentPadding = PaddingValues(start = 24.dp, end = 24.dp, top = 10.dp, bottom = 48.dp),
+                contentPadding = PaddingValues(start = 24.dp, end = 24.dp, top = 10.dp, bottom = 48.dp + navBarBottom),
                 modifier = Modifier.fillMaxSize(),
             ) {
                 item {

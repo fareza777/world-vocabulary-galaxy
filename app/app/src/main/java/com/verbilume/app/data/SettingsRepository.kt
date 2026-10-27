@@ -35,6 +35,7 @@ data class AppSettings(
     val includeMastered: Boolean = false,
     val reduceMotion: Boolean = false,
     val selectedTopics: Set<Int> = emptySet(),
+    val adsRemoved: Boolean = false,
 ) {
     val levelLabel: String get() = CEFR_LEVELS[level.coerceIn(0, 5)]
     val effectiveTopics: Set<Int> get() = selectedTopics
@@ -60,6 +61,7 @@ class SettingsRepository(private val context: Context) {
         val includeMastered = booleanPreferencesKey("include_mastered")
         val reduceMotion = booleanPreferencesKey("reduce_motion")
         val topics = stringPreferencesKey("selected_topics")
+        val adsRemoved = booleanPreferencesKey("ads_removed")
     }
 
     val settings: Flow<AppSettings> = context.settingsStore.data.map { p ->
@@ -82,6 +84,7 @@ class SettingsRepository(private val context: Context) {
             includeMastered = p[Keys.includeMastered] ?: false,
             reduceMotion = p[Keys.reduceMotion] ?: false,
             selectedTopics = (p[Keys.topics] ?: "").split(",").mapNotNull { it.toIntOrNull() }.toSet(),
+            adsRemoved = p[Keys.adsRemoved] ?: false,
         )
     }
 
@@ -106,6 +109,7 @@ class SettingsRepository(private val context: Context) {
                 includeMastered = p[Keys.includeMastered] ?: false,
                 reduceMotion = p[Keys.reduceMotion] ?: false,
                 selectedTopics = (p[Keys.topics] ?: "").split(",").mapNotNull { it.toIntOrNull() }.toSet(),
+                adsRemoved = p[Keys.adsRemoved] ?: false,
             )
             val next = transform(current)
             p[Keys.onboarding] = next.onboardingComplete
@@ -126,6 +130,7 @@ class SettingsRepository(private val context: Context) {
             p[Keys.includeMastered] = next.includeMastered
             p[Keys.reduceMotion] = next.reduceMotion
             p[Keys.topics] = next.selectedTopics.joinToString(",") { it.toString() }
+            p[Keys.adsRemoved] = next.adsRemoved
         }
     }
 

@@ -113,7 +113,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.statusBars),
-            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 6.dp, bottom = 118.dp + navBarBottom),
+            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 6.dp, bottom = 174.dp + navBarBottom),
             verticalArrangement = Arrangement.spacedBy(18.dp),
         ) {
             item {

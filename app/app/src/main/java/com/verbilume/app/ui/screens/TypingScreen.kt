@@ -1,5 +1,7 @@
 package com.verbilume.app.ui.screens
 
+import androidx.activity.compose.LocalActivity
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -285,6 +287,7 @@ fun TypingScreen(
     val viewModel = graphViewModel { TypingViewModel(graph, settings) }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val line = state.current
+    val activity = LocalActivity.current
     val playing by graph.audio.playing.collectAsStateWithLifecycle()
     val keyboard = LocalSoftwareKeyboardController.current
     val focus = remember { FocusRequester() }
@@ -322,7 +325,7 @@ fun TypingScreen(
             streak = state.streak,
             achievements = state.achievements,
             celebrate = !settings.reduceMotion,
-            onDone = onClose,
+            onDone = { graph.ads.showInterstitial(activity) { onClose() } },
             onAgain = { viewModel.load(state.mode) },
             againLabel = "Another pass",
         )

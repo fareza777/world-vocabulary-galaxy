@@ -1,5 +1,7 @@
 package com.verbilume.app.ui.screens
 
+import androidx.activity.compose.LocalActivity
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -233,6 +235,7 @@ fun MatchScreen(
     val colors = LocalVerbiColors.current
     val viewModel = graphViewModel { MatchViewModel(graph, settings) }
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val activity = LocalActivity.current
     var elapsed by remember { mutableLongStateOf(0L) }
     val running = !state.loading && !state.finished
 
@@ -257,7 +260,7 @@ fun MatchScreen(
             streak = state.streak,
             achievements = state.achievements,
             celebrate = !settings.reduceMotion,
-            onDone = onClose,
+            onDone = { graph.ads.showInterstitial(activity) { onClose() } },
             onAgain = { viewModel.load() },
             againLabel = "New pairing",
         )

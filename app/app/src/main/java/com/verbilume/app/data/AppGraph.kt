@@ -1,6 +1,8 @@
 package com.verbilume.app.data
 
 import android.content.Context
+import com.verbilume.app.ads.AdsManager
+import com.verbilume.app.billing.PurchaseManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -20,6 +22,8 @@ class AppGraph(context: Context) {
     val notifications = NotificationScheduler(appContext)
     val shareCards = ShareCardFactory(appContext, content)
     val sessions = SessionRepository(content, learning)
+    val ads = AdsManager(appContext)
+    val billing = PurchaseManager(appContext, settings, ads)
 
     fun warmUp() {
         notifications.ensureChannel()

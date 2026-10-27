@@ -640,7 +640,7 @@ private fun IdentityStep(
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    "Verbilume keeps every word, image and recording on your device. Your progress stays private — no account, no ads, no internet required.",
+                    "Verbilume keeps every word, image and recording on your device. Your progress stays private — no account, and the whole atlas works offline.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = colors.paper.copy(alpha = 0.72f),
                 )

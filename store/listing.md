@@ -32,7 +32,8 @@ PRACTISE THE WAY YOU LIKE
 
 BUILT FOR QUIET, EVERYDAY USE
 • Fully offline — every word, image and recording lives on your device
-• No account, no sign-in, no analytics, no advertising
+• No account, no sign-in, no analytics of our own
+• Optional one-time Remove ads purchase ($4.99); rewarded ads stay optional
 • Dark and light themes, with a warm paper palette designed for long sessions
 • Adjustable daily goal, word level (CEFR A1–C2), preferred realms and voice accent
 • A gentle daily reminder at the hour you choose
@@ -47,7 +48,7 @@ Students preparing for IELTS and other English exams, professionals working in E
 A VISUAL ATLAS, BUILT TO LAST
 7,298 words · 7,298 original illustrations · 14,596 example sentences · 22,905 audio recordings · 19 realms · CEFR A1–C2.
 
-Verbilume works entirely offline. There is no account, no analytics and no advertising. Your learning record never leaves your device unless you export it yourself.
+Verbilume works fully offline for learning. There is no account and no analytics of our own; ads are served by Google AdMob when a connection is available. A one-time Remove ads purchase ($4.99) hides banner and interstitial ads, while rewarded ads remain optional. Your learning record never leaves your device unless you export it yourself.
 
 The illustrated dictionary, dataset and recordings are derived from the open-source Word Atlas project and used under CC BY 4.0. See the in-app Licences screen for full attribution.
 ```
@@ -57,18 +58,19 @@ The illustrated dictionary, dataset and recordings are derived from the open-sou
 - Tags: English vocabulary, dictionary, IELTS, flashcards, spaced repetition
 
 ## Content rating
-Everyone. No user-generated content, no ads, no purchases.
+Everyone. No user-generated content. Contains ads (Google AdMob); optional one-time $4.99 Remove ads purchase.
 
 ## Data safety form answers
 | Question | Answer |
 | --- | --- |
-| Does your app collect or share any of the required user data types? | No |
-| Is all of the user data collected by your app encrypted in transit? | N/A — no data is transmitted |
-| Do you provide a way for users to request that their data be deleted? | Yes — Settings → Reset all progress erases all local data |
-| Data types collected | None |
-| Data types shared | None |
+| Does your app collect or share any of the required user data types? | Yes — via the Google Mobile Ads SDK (advertising ID, IP address, ad interactions) |
+| Is all of the user data collected by your app encrypted in transit? | Yes — ad requests use HTTPS |
+| Do you provide a way for users to request that their data be deleted? | Yes — Settings → Reset all progress erases all local data; the advertising ID can be reset in Android settings |
+| Data types collected | Device or other IDs; approximate location; app interactions (advertising only) |
+| Data types shared | Device or other IDs; approximate location; app interactions — shared with Google for advertising |
+| In-app purchases | One non-consumable remove-ads product ($4.99), processed entirely by Google Play; the developer receives no payment data |
 
-Notes for the reviewer: the app requests no INTERNET permission. `POST_NOTIFICATIONS` is used only for the optional daily reminder, and `VIBRATE` for its haptic. All progress is stored in a local SQLite file and a local datastore; the user can export it to a file they choose, or erase it, from Settings.
+Notes for the reviewer: the INTERNET permission is used by the Google Mobile Ads SDK and by Google Play Billing for the optional remove-ads purchase; the dictionary and all learning features work offline. `POST_NOTIFICATIONS` is used only for the optional daily reminder, and `VIBRATE` for its haptic. All progress is stored in a local SQLite file and a local datastore; the user can export it to a file they choose, or erase it, from Settings. The remove-ads purchase is a non-consumable in-app product (`remove_ads`, $4.99) processed entirely by Google Play; the developer receives no payment data.
 
 ## Store assets in this folder
 | File | Purpose | Spec |

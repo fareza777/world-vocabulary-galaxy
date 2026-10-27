@@ -1,5 +1,7 @@
 package com.verbilume.app.ui.screens
 
+import androidx.activity.compose.LocalActivity
+
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -210,6 +212,7 @@ fun FlashcardScreen(
     val viewModel = graphViewModel { FlashcardViewModel(graph, settings) }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val density = LocalDensity.current
+    val activity = LocalActivity.current
     val card = state.current
     val audio = card?.detail?.primaryAudio(settings.accent)
     val playing by graph.audio.playing.collectAsStateWithLifecycle()
@@ -237,7 +240,7 @@ fun FlashcardScreen(
             streak = state.streak,
             achievements = state.achievements,
             celebrate = !settings.reduceMotion,
-            onDone = onClose,
+            onDone = { graph.ads.showInterstitial(activity) { onClose() } },
             onAgain = { viewModel.load() },
             againLabel = "Shuffle a new deck",
         )

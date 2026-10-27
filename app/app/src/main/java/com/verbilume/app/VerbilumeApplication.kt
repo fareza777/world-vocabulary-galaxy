@@ -11,5 +11,7 @@ class VerbilumeApplication : Application() {
         super.onCreate()
         graph = AppGraph(this)
         graph.warmUp()
+        graph.ads.initialize()
+        graph.billing.start()
     }
 }

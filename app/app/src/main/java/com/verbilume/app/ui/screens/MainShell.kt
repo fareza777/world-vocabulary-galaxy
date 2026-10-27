@@ -36,6 +36,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,6 +56,7 @@ import androidx.navigation.NavType
 import com.verbilume.app.data.AppGraph
 import com.verbilume.app.data.AppSettings
 import com.verbilume.app.data.PracticeMode
+import com.verbilume.app.ads.BannerAd
 import com.verbilume.app.ui.theme.LocalVerbiColors
 import com.verbilume.app.ui.Routes
 import com.verbilume.app.ui.theme.ManropeFamily
@@ -71,6 +73,8 @@ fun MainShell(
     val route = backStack?.destination?.route
     val isMain = route == null || route in Routes.mainDestinations
     val isGalaxy = route == Routes.GALAXY
+    val billing by graph.billing.state.collectAsStateWithLifecycle()
+    val adsRemoved = billing.owned || settings.adsRemoved
 
     LaunchedEffect(pendingRoute) {
         if (!pendingRoute.isNullOrBlank()) {
@@ -265,11 +269,25 @@ fun MainShell(
             exit = slideOutVertically(tween(200)) { it } + fadeOut(tween(120)),
             modifier = Modifier.align(Alignment.BottomCenter),
         ) {
-            VerbiBottomBar(
-                currentRoute = route ?: Routes.HOME,
-                dark = isGalaxy,
-                onSelect = ::goTab,
-            )
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                if (!isGalaxy && !adsRemoved) {
+                    BannerAd(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 14.dp),
+                    )
+                }
+                VerbiBottomBar(
+                    currentRoute = route ?: Routes.HOME,
+                    dark = isGalaxy,
+                    onSelect = ::goTab,
+                )
+            }
         }
     }
 }
@@ -300,7 +318,6 @@ private fun VerbiBottomBar(
     Row(
         Modifier
             .fillMaxWidth()
-            .navigationBarsPadding()
             .padding(horizontal = 14.dp, vertical = 10.dp)
             .clip(RoundedCornerShape(26.dp))
             .background(background)

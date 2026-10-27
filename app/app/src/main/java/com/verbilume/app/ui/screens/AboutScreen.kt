@@ -12,9 +12,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -68,6 +71,7 @@ fun AboutScreen(
 ) {
     val colors = LocalVerbiColors.current
     val context = LocalContext.current
+    val navBarBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val meta by produceState<ContentMeta?>(initialValue = null) {
         value = withContext(Dispatchers.IO) { runCatching { graph.content.meta }.getOrNull() }
     }
@@ -100,7 +104,7 @@ fun AboutScreen(
         Column(Modifier.fillMaxSize()) {
             PageTopBar("About", onBack = onBack)
             LazyColumn(
-                contentPadding = PaddingValues(start = 24.dp, end = 24.dp, top = 10.dp, bottom = 48.dp),
+                contentPadding = PaddingValues(start = 24.dp, end = 24.dp, top = 10.dp, bottom = 48.dp + navBarBottom),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxSize(),
             ) {
@@ -194,7 +198,7 @@ fun AboutScreen(
                         )
                         Spacer(Modifier.height(12.dp))
                         Text(
-                            "The atlas is drawn as a night sky. Pan through the constellations, follow a topic, or simply open the day's word. No account, no advertising, no connection required.",
+                            "The atlas is drawn as a night sky. Pan through the constellations, follow a topic, or simply open the day's word. No account, and the whole atlas works offline.",
                             fontFamily = ManropeFamily,
                             fontSize = 13.sp,
                             lineHeight = 18.sp,

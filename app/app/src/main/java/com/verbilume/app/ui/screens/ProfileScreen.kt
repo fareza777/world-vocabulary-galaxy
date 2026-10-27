@@ -154,7 +154,7 @@ fun ProfileScreen(
 
     PaperBackground {
         LazyColumn(
-            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 128.dp + navBarBottom),
+            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 184.dp + navBarBottom),
             modifier = Modifier
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.statusBars),

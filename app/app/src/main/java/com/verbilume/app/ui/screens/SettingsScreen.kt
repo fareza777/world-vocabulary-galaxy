@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.widget.Toast
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -17,10 +18,13 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -35,6 +39,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowForward
+import androidx.compose.material.icons.rounded.Block
+import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material3.AlertDialog
@@ -73,6 +79,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.verbilume.app.data.Accent
 import com.verbilume.app.data.AppGraph
 import com.verbilume.app.data.AppSettings
@@ -80,6 +87,7 @@ import com.verbilume.app.data.ThemeMode
 import com.verbilume.app.data.TopicInfo
 import com.verbilume.app.ui.PageTopBar
 import com.verbilume.app.ui.PaperBackground
+import com.verbilume.app.ui.PrimaryButton
 import com.verbilume.app.ui.formatNumber
 import com.verbilume.app.ui.theme.FrauncesFamily
 import com.verbilume.app.ui.theme.LocalVerbiColors
@@ -98,7 +106,11 @@ fun SettingsScreen(
 ) {
     val colors = LocalVerbiColors.current
     val context = LocalContext.current
+    val activity = LocalActivity.current
     val scope = rememberCoroutineScope()
+    val billing by graph.billing.state.collectAsStateWithLifecycle()
+    val adsRemoved = settings.adsRemoved || billing.owned
+    val navBarBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     var showName by remember { mutableStateOf(false) }
     var showTopics by remember { mutableStateOf(false) }
     var showReset by remember { mutableStateOf(false) }
@@ -191,7 +203,7 @@ fun SettingsScreen(
         Column(Modifier.fillMaxSize()) {
             PageTopBar("Settings", onBack = onBack)
             LazyColumn(
-                contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 6.dp, bottom = 40.dp),
+                contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 6.dp, bottom = 40.dp + navBarBottom),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 modifier = Modifier.fillMaxSize(),
             ) {
@@ -228,6 +240,19 @@ fun SettingsScreen(
                             trailing = settings.displayName.ifBlank { "Set name" },
                         )
                     }
+                }
+
+                item { SectionLabel(if (adsRemoved) "SUPPORT" else "REMOVE ADS") }
+                item {
+                    RemoveAdsCard(
+                        owned = adsRemoved,
+                        price = billing.priceLabel ?: "$4.99",
+                        ready = billing.ready,
+                        busy = billing.busy,
+                        message = billing.message,
+                        onBuy = { graph.billing.purchase(activity) },
+                        onRefresh = { graph.billing.refresh() },
+                    )
                 }
 
                 item { SectionLabel("LEARNING") }
@@ -433,7 +458,7 @@ fun SettingsScreen(
                 item {
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        "Verbilume works entirely offline. There is no account, no analytics and no advertising.",
+                        "Lessons work fully offline. There is no account and no analytics of our own; ads need an internet connection.",
                         fontFamily = ManropeFamily,
                         fontSize = 12.5.sp,
                         lineHeight = 18.sp,
@@ -637,6 +662,115 @@ private fun SettingsCard(content: @Composable () -> Unit) {
 private fun CardDivider() {
     val colors = LocalVerbiColors.current
     Box(Modifier.fillMaxWidth().padding(horizontal = 16.dp).height(1.dp).background(colors.line.copy(alpha = 0.6f)))
+}
+
+@Composable
+private fun RemoveAdsCard(
+    owned: Boolean,
+    price: String,
+    ready: Boolean,
+    busy: Boolean,
+    message: String?,
+    onBuy: () -> Unit,
+    onRefresh: () -> Unit,
+) {
+    val colors = LocalVerbiColors.current
+    SettingsCard {
+        Column(Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    Modifier
+                        .size(40.dp)
+                        .clip(RoundedCornerShape(13.dp))
+                        .background(colors.brass.copy(alpha = 0.13f)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        if (owned) Icons.Rounded.CheckCircle else Icons.Rounded.Block,
+                        contentDescription = null,
+                        tint = colors.brass,
+                        modifier = Modifier.size(21.dp),
+                    )
+                }
+                Spacer(Modifier.width(12.dp))
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        "Remove ads",
+                        fontFamily = ManropeFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        color = colors.ink,
+                    )
+                    Spacer(Modifier.height(3.dp))
+                    Text(
+                        if (owned) "Banner and interstitial ads are off. Thank you for supporting the atlas."
+                        else "Banners and interstitials disappear for good. Rewarded ads stay optional.",
+                        fontFamily = ManropeFamily,
+                        fontSize = 12.5.sp,
+                        lineHeight = 17.sp,
+                        color = colors.inkFaint,
+                    )
+                }
+            }
+            Spacer(Modifier.height(14.dp))
+            if (owned) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Rounded.CheckCircle, null, tint = colors.teal, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(6.dp))
+                    Text(
+                        "Purchased · one-time",
+                        fontFamily = ManropeFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.5.sp,
+                        color = colors.teal,
+                    )
+                }
+            } else {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) {
+                        Text(
+                            price,
+                            fontFamily = FrauncesFamily,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 26.sp,
+                            color = colors.ink,
+                        )
+                        Text(
+                            "one-time · Google Play",
+                            fontFamily = ManropeFamily,
+                            fontSize = 11.5.sp,
+                            color = colors.inkFaint,
+                        )
+                    }
+                    PrimaryButton(
+                        text = if (busy) "Opening…" else "Buy",
+                        onClick = onBuy,
+                        enabled = ready && !busy,
+                        modifier = Modifier.width(112.dp),
+                    )
+                }
+                TextButton(onClick = onRefresh, contentPadding = PaddingValues(0.dp)) {
+                    Text(
+                        "Restore purchase",
+                        fontFamily = ManropeFamily,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 12.5.sp,
+                        color = colors.inkSoft,
+                    )
+                }
+                val status = message ?: if (!ready && !busy) "Checking Google Play…" else null
+                if (status != null) {
+                    Text(
+                        status,
+                        fontFamily = ManropeFamily,
+                        fontSize = 12.sp,
+                        lineHeight = 16.sp,
+                        color = if (message != null) colors.accent else colors.inkFaint,
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable

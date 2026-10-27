@@ -1,5 +1,7 @@
 package com.verbilume.app.ui.screens
 
+import androidx.activity.compose.LocalActivity
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
@@ -289,6 +291,7 @@ fun QuizScreen(
     val viewModel = graphViewModel(key = "quiz-${mode.wire}") { QuizViewModel(graph, settings, mode) }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val colors = LocalVerbiColors.current
+    val activity = LocalActivity.current
     val question = state.current
     val playing by graph.audio.playing.collectAsStateWithLifecycle()
     val audio = question?.detail?.primaryAudio(settings.accent)
@@ -348,7 +351,7 @@ fun QuizScreen(
             achievements = state.achievements,
             bonusXp = state.bonusXp,
             celebrate = !settings.reduceMotion,
-            onDone = onClose,
+            onDone = { graph.ads.showInterstitial(activity) { onClose() } },
             onAgain = if (mode == PracticeMode.DAILY) null else ({ viewModel.start() }),
             againLabel = "New round",
         )

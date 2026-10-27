@@ -164,7 +164,8 @@ class LearningRepository(
         val now = System.currentTimeMillis()
         val today = todayStat(todayKey())
         val totals = progress.rawQuery(
-            "SELECT COALESCE(SUM(xp),0), COALESCE(SUM(reviews),0), COUNT(*) FROM day_stats WHERE reviews > 0",
+            "SELECT (SELECT COALESCE(SUM(xp),0) FROM day_stats), COALESCE(SUM(reviews),0), COUNT(*) " +
+                "FROM day_stats WHERE reviews > 0",
             null,
         ).use { c ->
             if (c.moveToFirst()) Triple(c.getInt(0), c.getInt(1), c.getInt(2)) else Triple(0, 0, 0)
@@ -385,6 +386,21 @@ class LearningRepository(
                 progress.setTransactionSuccessful()
                 _dataVersion.value++
                 bonus to unlocked
+            } finally {
+                progress.endTransaction()
+            }
+        }
+    }
+
+    suspend fun grantBonusXp(amount: Int): Int = withContext(Dispatchers.IO) {
+        mutex.withLock {
+            progress.beginTransaction()
+            try {
+                bumpDayStats(todayKey(), xp = amount)
+                evaluateAchievementsLocked(System.currentTimeMillis())
+                progress.setTransactionSuccessful()
+                _dataVersion.value++
+                amount
             } finally {
                 progress.endTransaction()
             }

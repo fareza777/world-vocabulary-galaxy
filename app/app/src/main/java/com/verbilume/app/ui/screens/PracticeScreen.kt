@@ -1,5 +1,6 @@
 package com.verbilume.app.ui.screens
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -34,6 +35,7 @@ import androidx.compose.material.icons.rounded.Headphones
 import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material.icons.rounded.Keyboard
 import androidx.compose.material.icons.rounded.Link
+import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.Psychology
 import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.material.icons.rounded.WorkspacePremium
@@ -41,6 +43,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -131,11 +137,15 @@ fun PracticeScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val stats = state.stats
     val navBarBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    val activity = LocalActivity.current
+    val rewardedReady by graph.ads.rewardedReady.collectAsStateWithLifecycle()
+    val scope = rememberCoroutineScope()
+    var rewardNote by remember { mutableStateOf<String?>(null) }
 
     PaperBackground {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 128.dp + navBarBottom),
+            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 184.dp + navBarBottom),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier
@@ -217,6 +227,25 @@ fun PracticeScreen(
                 item {
                     ModeCard(entry)
                 }
+            }
+
+            item(span = { GridItemSpan(2) }) {
+                RewardCard(
+                    ready = rewardedReady,
+                    note = rewardNote,
+                    onClick = {
+                        graph.ads.showRewarded(
+                            activity = activity,
+                            onReward = {
+                                scope.launch {
+                                    graph.learning.grantBonusXp(REWARD_XP)
+                                    rewardNote = "$REWARD_XP XP added to today."
+                                }
+                            },
+                            onUnavailable = { rewardNote = "No offer right now. Try again in a moment." },
+                        )
+                    },
+                )
             }
 
             item(span = { GridItemSpan(2) }) {
@@ -401,6 +430,55 @@ private fun ModeCard(entry: PracticeEntry) {
             minLines = 2,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
+        )
+    }
+}
+
+private const val REWARD_XP = 15
+
+@Composable
+private fun RewardCard(ready: Boolean, note: String?, onClick: () -> Unit) {
+    val colors = LocalVerbiColors.current
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(24.dp))
+            .background(colors.raised)
+            .border(1.dp, colors.line.copy(alpha = 0.8f), RoundedCornerShape(24.dp))
+            .clickable(enabled = ready, onClick = onClick)
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(
+            Modifier.size(42.dp).clip(RoundedCornerShape(14.dp)).background(colors.brass.copy(alpha = 0.13f)),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(Icons.Rounded.PlayCircle, null, tint = colors.brass, modifier = Modifier.size(22.dp))
+        }
+        Spacer(Modifier.width(13.dp))
+        Column(Modifier.weight(1f)) {
+            Text(
+                "A small boost",
+                fontFamily = ManropeFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                color = colors.ink,
+            )
+            Spacer(Modifier.height(3.dp))
+            Text(
+                note ?: if (ready) "Watch a short ad · earn $REWARD_XP XP" else "Preparing today's offer…",
+                fontFamily = ManropeFamily,
+                fontSize = 13.sp,
+                lineHeight = 17.sp,
+                color = if (note == null) colors.inkFaint else colors.teal,
+            )
+        }
+        Spacer(Modifier.width(8.dp))
+        Icon(
+            Icons.Rounded.ArrowForward,
+            null,
+            tint = if (ready) colors.inkSoft else colors.inkFaint.copy(alpha = 0.4f),
+            modifier = Modifier.size(17.dp),
         )
     }
 }

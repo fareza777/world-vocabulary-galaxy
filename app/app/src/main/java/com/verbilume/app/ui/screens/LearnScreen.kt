@@ -1,5 +1,7 @@
 package com.verbilume.app.ui.screens
 
+import androidx.activity.compose.LocalActivity
+
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -264,6 +266,7 @@ fun LearnScreen(
     val viewModel = graphViewModel { LearnViewModel(graph, settings) }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val playing by graph.audio.playing.collectAsStateWithLifecycle()
+    val activity = LocalActivity.current
     val item = state.current
     val audio = item?.detail?.primaryAudio(settings.accent)
     val now = System.currentTimeMillis()
@@ -289,7 +292,7 @@ fun LearnScreen(
             celebrate = !settings.reduceMotion,
             onDone = {
                 viewModel.abandon()
-                onClose()
+                graph.ads.showInterstitial(activity) { onClose() }
             },
             onAgain = { viewModel.load() },
             againLabel = "Keep reviewing",
