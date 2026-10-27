@@ -1,0 +1,24 @@
+# Build output
+/app/.gradle/
+/app/.kotlin/
+/app/app/build/
+/app/build/
+/app/local.properties
+*.apk
+*.aab
+*.log
+
+# Local QA artifacts and tooling caches
+/qa/
+/.dist/
+/tools/node_modules/
+/tools/.cache/
+/tools/package/
+/tools/*.tgz
+
+# Signing secrets
+/keystore/
+/keystore.properties
+
+# Upstream reference clone (Word Atlas open collection)
+/repo/

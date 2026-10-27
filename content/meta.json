@@ -1,0 +1,141 @@
+{
+  "name": "Verbilume",
+  "contentVersion": "2026.10",
+  "words": 7298,
+  "senses": 13733,
+  "examples": 14596,
+  "collocations": 24722,
+  "audio": 22905,
+  "levels": {
+    "A1": 785,
+    "A2": 1039,
+    "B1": 1465,
+    "B2": 2127,
+    "C1": 1608,
+    "C2": 274
+  },
+  "topics": [
+    {
+      "key": "education",
+      "label": "Education",
+      "count": 378,
+      "color": "#f2c46d"
+    },
+    {
+      "key": "work",
+      "label": "Work",
+      "count": 414,
+      "color": "#ef8f6b"
+    },
+    {
+      "key": "technology",
+      "label": "Technology",
+      "count": 206,
+      "color": "#8fd0c8"
+    },
+    {
+      "key": "science",
+      "label": "Science",
+      "count": 325,
+      "color": "#9fb8ff"
+    },
+    {
+      "key": "environment",
+      "label": "Environment",
+      "count": 145,
+      "color": "#9be38f"
+    },
+    {
+      "key": "health",
+      "label": "Health",
+      "count": 381,
+      "color": "#ff9fa8"
+    },
+    {
+      "key": "society",
+      "label": "Society",
+      "count": 824,
+      "color": "#f7d9a8"
+    },
+    {
+      "key": "government",
+      "label": "Government",
+      "count": 205,
+      "color": "#c6a7ff"
+    },
+    {
+      "key": "economy",
+      "label": "Economy",
+      "count": 266,
+      "color": "#ffd36b"
+    },
+    {
+      "key": "media",
+      "label": "Media",
+      "count": 100,
+      "color": "#7fc4ff"
+    },
+    {
+      "key": "arts",
+      "label": "Arts",
+      "count": 228,
+      "color": "#ffb38a"
+    },
+    {
+      "key": "travel",
+      "label": "Travel",
+      "count": 300,
+      "color": "#86e0b5"
+    },
+    {
+      "key": "city",
+      "label": "City",
+      "count": 149,
+      "color": "#d8c3a5"
+    },
+    {
+      "key": "nature",
+      "label": "Nature",
+      "count": 443,
+      "color": "#b5e48c"
+    },
+    {
+      "key": "daily",
+      "label": "Daily",
+      "count": 1828,
+      "color": "#ffe6b0"
+    },
+    {
+      "key": "emotion",
+      "label": "Emotion",
+      "count": 364,
+      "color": "#ff8fc3"
+    },
+    {
+      "key": "thinking",
+      "label": "Thinking",
+      "count": 516,
+      "color": "#a8d8ff"
+    },
+    {
+      "key": "sport",
+      "label": "Sport",
+      "count": 103,
+      "color": "#ffcf7a"
+    },
+    {
+      "key": "history",
+      "label": "History",
+      "count": 123,
+      "color": "#e0b0ff"
+    }
+  ],
+  "levelsList": [
+    "A1",
+    "A2",
+    "B1",
+    "B2",
+    "C1",
+    "C2"
+  ]
+}

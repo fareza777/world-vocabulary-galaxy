@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:shortcutId="review"
+        android:shortcutLongLabel="@string/shortcut_review_long"
+        android:shortcutShortLabel="@string/shortcut_review_short">
+        <intent
+            android:action="com.verbilume.app.SHORTCUT"
+            android:targetClass="com.verbilume.app.MainActivity"
+            android:targetPackage="com.verbilume.app">
+            <extra
+                android:name="route"
+                android:value="learn" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:shortcutId="daily"
+        android:shortcutLongLabel="@string/shortcut_daily_long"
+        android:shortcutShortLabel="@string/shortcut_daily_short">
+        <intent
+            android:action="com.verbilume.app.SHORTCUT"
+            android:targetClass="com.verbilume.app.MainActivity"
+            android:targetPackage="com.verbilume.app">
+            <extra
+                android:name="route"
+                android:value="daily" />
+        </intent>
+    </shortcut>
+</shortcuts>

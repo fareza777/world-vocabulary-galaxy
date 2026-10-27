@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Verbilume</string>
+    <string name="channel_daily">Daily study</string>
+    <string name="channel_daily_desc">Gentle reminders for your daily words</string>
+    <string name="channel_streak">Streak</string>
+    <string name="channel_streak_desc">A nudge when your streak is at risk</string>
+    <string name="channel_word">Word of the Day</string>
+    <string name="channel_word_desc">A new illustrated word each morning</string>
+    <string name="shortcut_review_short">Review</string>
+    <string name="shortcut_review_long">Start a guided review</string>
+    <string name="shortcut_daily_short">Challenge</string>
+    <string name="shortcut_daily_long">Today\'s daily challenge</string>
+</resources>
